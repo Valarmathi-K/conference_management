@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conference Registration</title>
+  <style>
+    
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+     
+    }
+    
+    
+     .register {
+            background-image: url('register.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+     input,select,textarea{
+      width:400px;
+      height:50px;
+      padding:10px;
+      border-radius:5px;
+      margin: 10px 0;
+    
+      
+     } 
+    
+    .register-container {
+      
+    width: 400px;
+    height:50px;
+    padding:10px;
+    
+    color:block;
+    border:none;
+    outline:none;
+    border-radius:40px;
+    box-shadow: 0 0 10px rgba(0, 0,0,.1);
+    cursor:poiter;
+    font-size:16px;
+    margin-top:70px;
+    font-weight: 500;
+    
+    }
+    .register-container h2 {
+      margin-bottom:20px;
+      font-size: 24px;
+      color:blue;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"] ,
+    input[type="select"]
+    {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    input[type="submit"]:hover {
+      background-color: #30b025;
+    }
+  </style>
+</head>
+<body>
+  <center>
+  <div class="register">
+  <div class="register-container">
+    <h2>Register for Conference</h2>
+    
+    <form id="registrationForm" action="register_process.php" method="POST">
+      <input type="text" id="fullName" name="fullName" placeholder="Full Name*" required>
+    
+      <input type="email" id="email" name="email" placeholder="Email Address*" required>
+      <input type="tel" id="phone" name="phone" placeholder="Phone Number*" required>
+      <input type="password" id="password" name="password" placeholder="Password*" required>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password*" required>
+    
+      <select id="Role" name="Role" placeholder="Role" required>
+        <option value="">---Role---</option>
+        <option value="Admin">Admin</option>
+        <option value="Author">Author</option>
+        <option value="Reviwer">Reviewer</option>
+        <option value="Attendee">Attendee</option>
+      </select>
+      
+      
+      <input type="submit" value="Register">
+    
+    </form>
+  </center>
+  </div>
+</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("registrationForm");
+  
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); 
+        let errors = [];
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+  
+        // Validate Full Name: non-empty, <=15 characters, only letters and spaces
+        if (fullName === "") {
+          errors.push("Full Name is required.");
+        } else {
+          if (fullName.length > 15) {
+            errors.push("Full Name must be 15 characters or fewer.");
+          }
+          if (!/^[A-Za-z\s]+$/.test(fullName)) {
+            errors.push("Full Name can only contain letters and spaces.");
+          }
+        }
+  
+        // Validate Email: non-empty and valid format
+        if (email === "") {
+          errors.push("Email is required.");
+        } else if (!validateEmail(email)) {
+          errors.push("Please enter a valid email address.");
+        }
+  
+        // Validate Phone: non-empty, only digits, exactly 10 digits
+        if (phone === "") {
+          errors.push("Phone number is required.");
+        } else if (!/^\d{10}$/.test(phone)) {
+          errors.push("Phone number must contain exactly 10 digits.");
+        }
+  
+        // Validate Password: non-empty and exactly 8 characters
+        if (password === "") {
+          errors.push("Password is required.");
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]){8}$/.text(password)) {
+          errors.push("Password must be exactly 8 characters long and include at least one uppercase letter,one lowercase letter and onedigit.");
+        }
+  
+        // Validate Confirm Password: non-empty and must match password
+        if (confirmPassword === "") {
+          errors.push("Confirm Password is required.");
+        } else if (password !== confirmPassword) {
+          errors.push("Passwords do not match.");
+        }
+  
+        // If there are errors, show them and prevent form submission
+        if (errors.length > 0) {
+          alert(errors.join("\n"));
+          return;
+        }
+  
+        // If validation passes, alert success and submit the form
+        alert("Registration successful!");
+        form.submit();
+      });
+  
+      // Function to validate email format using a regular expression
+      function validateEmail(email) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+      }
+    });
+  </script>
+</body>
+</html>

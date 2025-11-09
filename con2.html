@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="image">
+    <form id="loginForm" action="project.html" novalidate>
+      <div class="a">
+        <center>
+          <h1 style="color:aqua">LOGIN FOR CONFERENCE</h1>
+        </center>
+      </div>
+      <div class="b">
+        <table class="design">
+          <tr>
+            <td>
+              <div class="input-box">
+                <input type="email" placeholder="Email" id="email" required>
+                <i class='bx bxs-user-circle'></i>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="input-box">
+                <input type="password" placeholder="Password" id="password" required>
+                <i class='bx bxs-lock-alt'></i>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="remember-forgot">
+                <label>
+                  <input type="checkbox"> Remember me
+                </label>
+                <a href="#" style="margin-left: 20px;">Forgot password?</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <center>
+                <button type="submit" class="btn">Login</button>
+              </center>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="register-link">
+                <p>Don't have an account? <a href="register.html">Register</a></p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+
+  <!-- Embedded JavaScript for login validation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('loginForm');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+
+      form.addEventListener('submit', function(event) {
+        let valid = true;
+        let errorMessage = '';
+
+        // Validate email input
+        if (!emailInput.value.trim()) {
+          errorMessage += 'Please enter your email.\n';
+          valid = false;
+        } else if (!validateEmail(emailInput.value.trim())) {
+          errorMessage += 'Please enter a valid email address.\n';
+          valid = false;
+        }
+
+        // Validate password input
+        if (!passwordInput.value.trim()) {
+          errorMessage += 'Please enter your password.\n';
+          valid = false;
+        } else if (passwordInput.value.trim().length < 8) {
+          errorMessage += 'Password must be at least 8 characters long.\n';
+          valid = false;
+        }
+
+        if (!valid) {
+          event.preventDefault();
+          alert(errorMessage);
+        }
+        if (valid){
+        alert("login successful!");
+        form.submit();
+      }
+      
+      });
+
+      // Simple email validation regex
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+    });
+  </script>
+</body>
+</html>

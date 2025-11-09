@@ -1,0 +1,47 @@
+//register
+CREATE TABLE registercms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullName VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(15) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    Role ENUM('Admin', 'Author', 'Reviewer', 'Attendee') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+//paper
+CREATE TABLE papers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    abstract TEXT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ CREATE TABLE papers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    abstract TEXT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES registercms(id) ON DELETE CASCADE
+);
+//review
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    paper_id INT NOT NULL,
+    reviewer_id INT NOT NULL,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    feedback_to_author TEXT NOT NULL,
+    confidential_comments TEXT,
+    reviewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (paper_id) REFERENCES papers(id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewer_id) REFERENCES registercms(id) ON DELETE CASCADE
+);
+//session
+CREATE TABLE schedule (
+    session_id INT AUTO_INCREMENT PRIMARY KEY,
+    session_title VARCHAR(255) NOT NULL,
+    speaker VARCHAR(255),
+    date DATE,
+    time TIME
+);

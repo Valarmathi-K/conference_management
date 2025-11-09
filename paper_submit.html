@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Submission</title>
+    <link rel="stylesheet" type="text/css" href="paper.css">
+</head>
+<body>
+    <img src="paper2.jpg" alt="Paper Submission Image" width="300">
+    <div class="container">
+        <center>
+            <h1>Paper Submission</h1>
+            
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <td><label for="title">Title:</label></td>
+                        <td><input type="text" id="title" name="title" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="abstract">Abstract:</label></td>
+                        <td><textarea id="abstract" name="abstract" rows="5" required></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="file">Upload File:</label></td>
+                        <td><input type="file" id="file" name="file" accept=".pdf,.docx" required></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Submit"></td>
+                    </tr>
+                </table>
+            </form>
+        </center>
+    </div>
+
+</body>
+</html>

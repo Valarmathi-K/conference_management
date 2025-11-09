@@ -1,0 +1,41 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conference System</title>
+    <style>
+        .nav {
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .nav a {
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            float: left;
+        }
+        .nav a:hover {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <a href="index.php">Home</a>
+
+    <?php if (!isset($_SESSION['register_id'])): ?>
+        <a href="register.php">Register</a>
+        <a href="login.php">Login</a>
+    <?php else: ?>
+        <?php if ($_SESSION['role'] === 'Admin'): ?>
+            <a href="admin_home.php">Admin Panel</a>
+        <?php else: ?>
+            <a href="user_dashboard.php">Dashboard</a>
+        <?php endif; ?>
+        <a href="logout.php">Logout</a>
+    <?php endif; ?>
+</div>
+
+<!-- Continue with your page content -->

@@ -1,0 +1,163 @@
+<?php
+session_start();
+include("configuration.php");
+
+if (!isset($_SESSION['register_id']) || $_SESSION['role'] !== 'Admin') {
+    echo "<script>alert('Access denied. Admins only.'); window.location.href='login.php';</script>";
+    exit();
+}
+
+// Handle decision form submission
+if (isset($_POST['decision'])) {
+     $paper_id = $_POST['paper_id'];
+     $decision = $_POST['decision'];
+     // Check if all reviews are completed (no NULL or empty feedback)
+     $checkReviews = mysqli_query($con, "SELECT COUNT(*) AS pending FROM reviews r 
+     JOIN reviewer_assignments ra ON r.assignment_id = ra.assign_id 
+     WHERE ra.paper_id = '$paper_id' AND (r.feedback_to_author IS NULL OR r.feedback_to_author = '')");
+    $pendingRow = mysqli_fetch_assoc($checkReviews);
+    if ($pendingRow['pending'] == 0) {
+         mysqli_query($con, "UPDATE papers SET status = '$decision' WHERE paper_id = '$paper_id'");
+         echo "<script>alert('Decision updated successfully');</script>";
+    } 
+    else {
+         echo "<script>alert('Cannot update decision. Review not complete.');</script>";
+    }
+    }
+$query = "SELECT p.paper_id AS paper_id, p.title, p.status, r.rating, r.feedback_to_author, u.fullName AS reviewer
+    FROM papers p
+    LEFT JOIN reviewer_assignments ra ON p.paper_id = ra.paper_id
+    LEFT JOIN reviews r ON r.assignment_id = ra.assign_id
+    LEFT JOIN registercms u ON ra.reviewer_id = u.register_id
+    ORDER BY p.paper_id DESC";
+$result = mysqli_query($con,$query);
+if(!$result){
+    die("query failed:".mysqli_error($con));
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Decisions</title>
+    <link rel="stylesheet" type="text/css" href="logout.css">
+    <style>
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffe6f0;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background-color:rgb(143, 14, 143);
+            color:white;
+            padding: 10px;
+            margin-top:0px;
+            width: 100%;
+            height:  50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: center;
+            z-index: 1000; /* Keeps it above other content */
+        }
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 95%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin-top:70px;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color:rgb(103, 22, 116);
+            color: #fff;
+            font-size: 16px;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        tr:nth-child(even){
+            background-color: #f9f9f9;
+        }
+        .btn {
+            background-color:rgb(44, 73, 189);
+            padding: 8px 15px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 12px;
+            transition: background-color 0.3s;
+            border-color:rgb(44, 73, 189);
+            margin-left:10px;
+        }
+        .btn:hover {
+            background-color:rgb(121, 146, 209);
+        }
+        
+        form 
+        { 
+            display: inline;
+         }
+        select, button 
+        { 
+            padding: 5px; 
+        }
+    </style>
+</head>
+<body>
+    <header><h2>Paper Reviews & Decisions</h2></header>
+    <div class="btncls">
+      <a href="view_paper.php" class="backbtn">Go Back</a>
+      <a href="logout.php"  class="logout1">Logout</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Paper Title</th>
+            <th>Reviewer</th>
+            <th>Rating</th>
+            <th>Feedback</th>
+            <th>Status</th>
+            <th>Make Decision</th>
+        </tr>
+        <?php
+        $current_paper = null;
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>{$row['title']}</td>";
+            echo "<td>{$row['reviewer']}</td>";
+            echo "<td>{$row['rating']}</td>";
+            echo "<td>{$row['feedback_to_author']}</td>";
+            echo "<td>{$row['status']}</td>";
+            if (!empty($row['feedback_to_author'])) {
+                echo "<td>
+                    <form method='post'>
+                         <input type='hidden' name='paper_id' value='{$row['paper_id']}'>
+                        <select name='decision'>
+                             <option value='Accepted'>Accept</option>
+                             <option value='Rejected'>Reject</option>
+                        </select>
+                        <button type='submit' class='btn'>Update</button>
+                    </form>
+             </td>";
+             } 
+             else {
+                echo "<td><em>Waiting for Review</em></td>";
+            }
+        }
+        ?>
+    </table>
+</body>
+</html>

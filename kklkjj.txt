@@ -1,0 +1,219 @@
+
+/*session_start();
+include("configuration.php"); 
+$paperId=$_GET['paper_id']??null;
+$paper=[];
+if ($paperId) {
+  $query = "SELECT * FROM papers WHERE paper_id = ?";
+  $stmt = mysqli_prepare($con, $query);
+  mysqli_stmt_bind_param($stmt, "i", $paperId);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+  $paper = mysqli_fetch_assoc($result);
+  }
+if(!$paperId||empty($paper)){
+  echo "<script>alert('Invalid or missing paperId');window.location.href='paper_list.php';</script>";
+  exit();
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $paperId=$_POST['assignment_id']?? null;
+    $rating = $_POST['rating'] ?? null;
+    $feedback = trim($_POST['feedback']);
+    $adminComments = trim($_POST['admin_comments']);
+    $reviewerId=$_SESSION['reviewer_id']?? null;
+    if(!$reviewerId)
+    {
+
+      echo "<script>alert('Reviewer not logged in');window.location.href='login.php';</script>"; 
+      exit();
+    }
+
+    if (empty($assignment_Id) || empty($rating) || empty($feedback)) {
+        echo "<script>alert('PaperId,Rating and Feedback are required.'); window.history.back();</script>";
+        exit();
+    }
+
+    $query = "INSERT INTO reviews (assignment_id, rating, feedback_to_author, confidential_comments) VALUES ( ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($con, $query);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "iiss", $assignment_id, $rating, $feedback, $adminComments);
+        if(mysqli_stmt_execute($stmt)) 
+        {
+            echo "<script>alert('Review submitted successfully!'); window.location.href='review.php';</script>";
+        } else {
+            echo "<script>alert('Database error: " . mysqli_stmt_error($stmt) . "');</script>";
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<script>alert('Error preparing statement.');</script>";
+    }
+
+    mysqli_close($con);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paper Review Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color:pink;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    .button {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: purple;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background:purple;
+    }
+
+    .paper-section {
+      background: #eef2f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* Star Rating Style 
+    .star-rating {
+      direction: rtl;
+      display: inline-flex;
+      font-size: 30px;
+      margin-top: 10px;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: gold;
+    }
+  </style>
+</head>
+<div class="container">
+   <h2>Review Paper</h2>
+
+ <div class="paper-section"> 
+  <p><strong>Paper ID:</strong> <?= htmlspecialchars($paper['paper_id'] ?? 'N/A') ?></p>
+  <p><strong>Title:</strong> <?= htmlspecialchars($paper['title'] ?? 'N/A') ?></p>
+  <p><strong>Abstract:</strong> <?= htmlspecialchars($paper['abstract'] ?? 'N/A') ?></p>
+  <?php if (!empty($paper['file_path'])): ?>
+  <a href="<?= htmlspecialchars($paper['file_path']) ?>" target="_blank">Download DOCX</a>
+  <?php endif; ?>
+  </div>
+
+  
+  <form action="review.php?paper_id=<?= htmlspecialchars($paper['paper_id']) ?>" method="POST">
+    <input type="hidden" name="paper_id" value="<?=htmlspecialchars($paper['paper_id']) ?>">
+    <label for="rating">Rating (1–5 Stars)</label>
+    <div class="star-rating">
+      <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
+      <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+      <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+      <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+      <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+    </div>
+
+    <label for="feedback">Feedback to Author</label>
+    <textarea id="feedback"name="feedback" placeholder="Write your comments here..." required></textarea>
+
+    <label for="admin_comments">Confidential Comments to Admin (optional)</label>
+    <textarea id="admin_comments" name="admin_comments" placeholder="Only visible to admin..."></textarea>
+
+    <div class="button">
+      <button type="submit">Submit Review</button>
+    </div>
+  </form>
+</div>
+ <script>
+document.querySelector("form").addEventListener("submit", function(event) {
+  const ratingChecked = document.querySelector('input[name="rating"]:checked');
+  const feedback = document.getElementById("feedback").value.trim();
+  const adminComments = document.getElementById("admin-comments").value.trim();
+
+  let errors = [];
+
+  if (!ratingChecked) {
+    errors.push("Please select a star rating.");
+  }
+
+  if (feedback.length < 10) {
+    errors.push("Feedback must be at least 10 characters.");
+  }
+
+  if (adminComments.length > 500) {
+    errors.push("Confidential comments should not exceed 500 characters.");
+  }
+
+  if (errors.length > 0) {
+    event.preventDefault();
+    alert(errors.join("\n"));
+  }
+});
+</script>
+</body>
+</html>-->*/

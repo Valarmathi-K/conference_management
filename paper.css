@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+.container {
+    background-color: rgba(255, 255, 255, 0.651); 
+    width: 40%;
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 254, 254, 0.1);
+    text-align: center;
+    margin-left:400px;
+    margin-bottom:20px;
+    margin-top: 150px;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+}
+table {
+    width: 70%;
+    margin-top: 20px;
+}
+td {
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
+}
+input[type="text"], textarea, input[type="file"] {
+    width: 70%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.image {
+    position: fixed;
+    background-image: url('http://localhost/home%20page/papersum.jpg'); /* Ensure image file is in the same directory */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index:-1;
+    opacity:0.3;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
+}
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 15px;
+    }
+    td {
+        display: block;
+        text-align: left;
+    }
+}

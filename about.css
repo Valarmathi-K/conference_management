@@ -1,0 +1,92 @@
+/* Reset some basic styling 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}*/
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color:darkgoldenrod;
+    color:white;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color:grey;
+    padding: 1rem;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar li {
+    margin: 0 15px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover, .navbar a.active {
+    color:white;
+}
+
+/* About section styling 
+.about-section {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}*/
+
+.about-section h1 { 
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color:white;
+}
+
+.about-section h2 {
+    margin-top: 1.5rem;
+    color:white;
+}
+
+.about-section p {
+    margin-bottom: 1.2rem;
+    color: white;
+}
+
+.about-section ul {
+    list-style-type: square;
+    padding-left: 20px;
+}
+
+.about-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Footer styling */
+footer {
+   
+    color: blue;
+    text-align: center;
+}
+
+h3 {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+imgp1{
+    
+}
+
